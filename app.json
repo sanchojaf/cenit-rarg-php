@@ -1,0 +1,8 @@
+{
+  "name": "Cenit-IO Remote Algorithms",
+  "description": "REST service to run Cenit-IO remote algorithms written in PHP.",
+  "repository": "https://github.com/cenit-io/cenit-rarg-php",
+  "logo": "http://cenit-rarg-php.herokuapp.com/public/images/php.svg",
+  "keywords": ["cenit-io"],
+  "image": "heroku/php"
+}
