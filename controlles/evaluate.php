@@ -1,4 +1,6 @@
 <?php
+use Symfony\Component\HttpFoundation\Response;
+
 $ctrl = $app['controllers_factory'];
 
 $ctrl->get('/', function () use ($app) {
@@ -10,15 +12,21 @@ $ctrl->post('/', function () use ($app) {
   $GLOBALS['response'] = new StdClass();
 
   function done($result) {
-    $GLOBALS['response']->error = false;
-    $GLOBALS['response']->result = $result;
-    $GLOBALS['response']->contents = ob_get_contents();
+    global $app;
+
+    $GLOBALS['response'] = $app->json($result);
   }
 
   function raise($error) {
-    $GLOBALS['response']->error = is_string($error) ? $error : $error->getMessage();
-    $GLOBALS['response']->result = null;
-    $GLOBALS['response']->contents = ob_get_contents();
+    if ($error instanceof Error) {
+      $msg = $error->getMessage();
+    } else if (is_object($error) && method_exists($error, 'toString')) {
+      $msg = $error->toString();
+    } else {
+      $msg =  $error;
+    }
+
+    $GLOBALS['response'] = new Response((string)$msg, 500);
   }
 
   try {
@@ -32,7 +40,7 @@ $ctrl->post('/', function () use ($app) {
     raise($e);
   }
 
-  echo json_encode($GLOBALS['response']);
+  return $GLOBALS['response'];
   exit();
 });
 
