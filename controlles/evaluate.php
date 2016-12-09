@@ -2,7 +2,7 @@
 function done($result) {
   header('Content-Type: application/json');
   ob_clean();
-  echo json_decode($result);
+  echo json_encode($result);
   ob_flush();
   exit();
 }
@@ -29,7 +29,7 @@ try {
     // Save parameters in $params.
     $params = is_string($_POST['parameters']) ? json_decode($_POST['parameters']) : $_POST['parameters'];
     // Legacy: Declare local var for each parameter.
-    extract(is_string($_POST['parameters']) ? json_decode($_POST['parameters'], true) : $_POST['parameters'], false);
+    extract($params, false);
     // Run code.
     eval($_POST['code']);
   }
